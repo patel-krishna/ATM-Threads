@@ -7,7 +7,7 @@
 
 /** Accounts class
  *
- * @author Kerly Titus
+ * @author Kerly Titus 
  */
 public class Accounts {
     

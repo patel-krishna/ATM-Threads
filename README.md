@@ -1,6 +1,6 @@
 # ATM Machine Simulation
 
-Java program for COMP 346 Assignment 1. Understanding processes and threads in an Operating System but simulating an ATM machine. 
+Java program for COMP 346 Assignment 1. Understanding processes and threads in an Operating System by simulating an ATM machine. 
 
 ## Description
 

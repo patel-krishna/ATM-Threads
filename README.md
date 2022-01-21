@@ -4,7 +4,7 @@ Java program for COMP 346 Assignment 1. Understanding processes and threads in a
 
 ## Description
 
-*Implementation of classes 
+* Implementation of classes 
   - Main class
   - Client class
   - Server Class
@@ -12,7 +12,7 @@ Java program for COMP 346 Assignment 1. Understanding processes and threads in a
   - Transaction Class
   - Accounts Class 
 
-*Implementing 4 threads so that the client, the server and the network all run concurrently. 
+* Implementing 4 threads so that the client, the server and the network all run concurrently. 
 
 ## Authors
 - John Lin

@@ -15,7 +15,7 @@ import java.util.InputMismatchException;
  * @author Kerly Titus
  */
 
-public class Client { 
+public class Client extends Thread{ 
     
     private static int numberOfTransactions;   		/* Number of transactions to process */
     private static int maxNbTransactions;      		/* Maximum number of transactions */
@@ -112,7 +112,7 @@ public class Client {
         
         try
         {
-        	inputStream = new Scanner(new FileInputStream("transaction.txt"));
+        	inputStream = new Scanner(new FileInputStream("src\\transaction.txt"));
         }
         catch(FileNotFoundException e)
         {
@@ -157,7 +157,7 @@ public class Client {
          
          while (i < getNumberOfTransactions())
          {  
-            // while( objNetwork.getInBufferStatus().equals("full") );     /* Alternatively, busy-wait until the network input buffer is available */
+             while( objNetwork.getInBufferStatus().equals("full") );     /* Alternatively, busy-wait until the network input buffer is available */
                                              	
             transaction[i].setTransactionStatus("sent");   /* Set current transaction status */
            
@@ -181,7 +181,7 @@ public class Client {
          
          while (i < getNumberOfTransactions())
          {     
-        	 // while( objNetwork.getOutBufferStatus().equals("empty"));  	/* Alternatively, busy-wait until the network output buffer is available */
+        	  while( objNetwork.getOutBufferStatus().equals("empty"));  	/* Alternatively, busy-wait until the network output buffer is available */
                                                                         	
             objNetwork.receive(transact);                               	/* Receive updated transaction from the network buffer */
             
@@ -211,8 +211,30 @@ public class Client {
     public void run()
     {   
     	Transactions transact = new Transactions();
-    	long sendClientStartTime, sendClientEndTime, receiveClientStartTime, receiveClientEndTime;
+    	long sendClientStartTime, sendClientEndTime, 
+    	receiveClientStartTime, receiveClientEndTime;
     
     	/* Implement here the code for the run method ... */
+    	
+    	if(this.clientOperation.equals("sending")) {
+    		System.out.println("\n DEBUG : Client.run() - starting client sending thread connected");
+            objNetwork.connect(objNetwork.getClientIP());
+            sendClientStartTime = System.currentTimeMillis();
+            this.sendTransactions();
+            sendClientEndTime = System.currentTimeMillis();
+            System.out.println("\nTerminating client sending thread -  Running time "+ (sendClientEndTime - sendClientStartTime) +" milliseconds");
+            objNetwork.disconnect(objNetwork.getClientIP());
+    		
+    		
+    	}else if (this.clientOperation.equals("receiving")) {
+    		System.out.println("\n DEBUG : Client.run() - starting client recieving thread connected");
+            objNetwork.connect(objNetwork.getClientIP());
+            receiveClientStartTime = System.currentTimeMillis();
+            this.receiveTransactions(transact);
+            receiveClientEndTime = System.currentTimeMillis();
+            System.out.println("\nTerminating client receiving thread - Running time " + (receiveClientEndTime - receiveClientStartTime) + " milliseconds");
+            objNetwork.disconnect(objNetwork.getClientIP());
+    	}
     }
+    
 }

@@ -15,7 +15,7 @@ import java.util.InputMismatchException;
  * @author Kerly Titus
  */
 
-public class Server {
+public class Server extends Thread{
   
 	int numberOfTransactions;         /* Number of transactions handled by the server */
 	int numberOfAccounts;             /* Number of accounts stored in the server */
@@ -128,7 +128,7 @@ public class Server {
         
         try
         {
-         inputStream = new Scanner(new FileInputStream("account.txt"));
+         inputStream = new Scanner(new FileInputStream("src\\account.txt"));
         }
         catch(FileNotFoundException e)
         {

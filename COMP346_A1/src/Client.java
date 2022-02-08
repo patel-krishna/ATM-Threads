@@ -103,7 +103,11 @@ public class Client extends Thread {
         int i = 0; /* Index of transactions array */
 
         try {
-            inputStream = new Scanner(new FileInputStream("src\\transaction.txt"));
+            // Mac
+            inputStream = new Scanner(new FileInputStream("src/transaction.txt"));
+
+            // Windows
+            // inputStream = new Scanner(new FileInputStream("src\\transaction.txt"));
         } catch (FileNotFoundException e) {
             System.out.println("File transaction.txt was not found");
             System.out.println("or could not be opened.");

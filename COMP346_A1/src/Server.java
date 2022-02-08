@@ -39,7 +39,7 @@ public class Server extends Thread {
         transaction = new Transactions();
         account = new Accounts[maxNbAccounts];
         objNetwork = new Network("server");
-        System.out.println("\n Inializing the Accounts database ...");
+        System.out.println("\n Initializing the Accounts database ...");
         initializeAccounts();
         System.out.println("\n Connecting server to network ...");
         if (!(objNetwork.connect(objNetwork.getServerIP()))) {
@@ -119,7 +119,11 @@ public class Server extends Thread {
         int i = 0; /* index of accounts array */
 
         try {
-            inputStream = new Scanner(new FileInputStream("src\\account.txt"));
+            // Mac
+            inputStream = new Scanner(new FileInputStream("src/account.txt"));
+
+            // Windows
+            // inputStream = new Scanner(new FileInputStream("src\\account.txt"));
         } catch (FileNotFoundException e) {
             System.out.println("File account.txt was not found");
             System.out.println("or could not be opened.");
@@ -310,6 +314,18 @@ public class Server extends Thread {
                         + objNetwork.getServerConnectionStatus());
 
         /* Implement the code for the run method */
+
+        // While the input buffer status is empty, continue to yield the thread
+        while (this.objNetwork.getInBufferStatus().equals("empty")) {
+            Thread.yield();
+        }
+
+        // Process transactions from the input buffer thread until all transactions are
+        // done
+        this.processTransactions(trans);
+
+        // Once processTransactions is completed, disconnect server
+        this.objNetwork.disconnect(this.objNetwork.getServerIP());
 
         serverEndTime = System.currentTimeMillis();
 

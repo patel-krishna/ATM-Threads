@@ -120,10 +120,10 @@ public class Server extends Thread {
 
         try {
             // Mac
-            inputStream = new Scanner(new FileInputStream("src/account.txt"));
+           // inputStream = new Scanner(new FileInputStream("src/account.txt"));
 
             // Windows
-            // inputStream = new Scanner(new FileInputStream("src\\account.txt"));
+             inputStream = new Scanner(new FileInputStream("src\\account.txt"));
         } catch (FileNotFoundException e) {
             System.out.println("File account.txt was not found");
             System.out.println("or could not be opened.");
@@ -180,7 +180,9 @@ public class Server extends Thread {
 
         /* Process the accounts until the client disconnects */
         while ((!objNetwork.getClientConnectionStatus().equals("disconnected"))) {
-            /* while( (objNetwork.getInBufferStatus().equals("empty"))); */
+             while(objNetwork.getInBufferStatus().equals("empty")) {
+            	 Thread.yield();
+             } 
             /* Alternatively, busy-wait until the network input buffer is available */
 
             if (!objNetwork.getInBufferStatus().equals("empty")) {
@@ -218,7 +220,9 @@ public class Server extends Thread {
                             + trans.getAccountNumber());
                 }
 
-                // while( (objNetwork.getOutBufferStatus().equals("full"))); /* Alternatively,
+                while( (objNetwork.getOutBufferStatus().equals("full"))) {
+                	Thread.yield();
+                } /* Alternatively,
                 // busy-wait until the network output buffer is available */
 
                 System.out.println("\n DEBUG : Server.processTransactions() - transferring out account "
@@ -307,6 +311,7 @@ public class Server extends Thread {
         Transactions trans = new Transactions();
         long serverStartTime, serverEndTime;
 
+        
         serverStartTime = System.currentTimeMillis();
 
         System.out

@@ -104,10 +104,10 @@ public class Client extends Thread {
 
         try {
             // Mac
-            inputStream = new Scanner(new FileInputStream("src/transaction.txt"));
+            //inputStream = new Scanner(new FileInputStream("src/transaction.txt"));
 
             // Windows
-            // inputStream = new Scanner(new FileInputStream("src\\transaction.txt"));
+             inputStream = new Scanner(new FileInputStream("src\\transaction.txt"));
         } catch (FileNotFoundException e) {
             System.out.println("File transaction.txt was not found");
             System.out.println("or could not be opened.");
@@ -146,8 +146,9 @@ public class Client extends Thread {
         int i = 0; /* index of transaction array */
 
         while (i < getNumberOfTransactions()) {
-            while (objNetwork.getInBufferStatus().equals("full"))
-                ; /* Alternatively, busy-wait until the network input buffer is available */
+            while (objNetwork.getInBufferStatus().equals("full")) {
+            	Thread.yield();
+            } /* Alternatively, busy-wait until the network input buffer is available */
 
             transaction[i].setTransactionStatus("sent"); /* Set current transaction status */
 
@@ -170,8 +171,11 @@ public class Client extends Thread {
         int i = 0; /* Index of transaction array */
 
         while (i < getNumberOfTransactions()) {
-            while (objNetwork.getOutBufferStatus().equals("empty"))
-                ; /* Alternatively, busy-wait until the network output buffer is available */
+            while (objNetwork.getOutBufferStatus().equals("empty")) {
+            	if (objNetwork.getClientConnectionStatus().equals("disconnected"))
+                    break;
+            	Thread.yield();
+            } /* Alternatively, busy-wait until the network output buffer is available */
 
             objNetwork.receive(transact); /* Receive updated transaction from the network buffer */
 
@@ -206,6 +210,8 @@ public class Client extends Thread {
                 receiveClientStartTime, receiveClientEndTime;
 
         /* Implement here the code for the run method ... */
+        
+      
 
         if (this.clientOperation.equals("sending")) {
             System.out.println("\n DEBUG : Client.run() - starting client sending thread connected");

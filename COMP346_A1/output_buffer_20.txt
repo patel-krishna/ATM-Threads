@@ -1,4 +1,7 @@
 // Buffer Size: 20
+// A larger buffer size causes slightly faster running times especially in the server thread
+// since a larger buffer takes longer to fill or empty. If a buffer is full or empty, the thread
+// must yield while other threads do their work, increasing the total running time.
 
  Activating the network ...
 

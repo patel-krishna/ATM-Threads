@@ -351,7 +351,13 @@ public class Server extends Thread {
         // done
         this.processTransactions(trans);
 
-        // Once processTransactions is completed, disconnect server
+        // Once processTransactions is completed, check if client is still connected. If
+        // so, yield thread.
+        // Once the client is done, disconnect the server
+        while (this.objNetwork.getClientConnectionStatus().equals("connected")) {
+            Thread.yield();
+        }
+
         this.objNetwork.disconnect(this.objNetwork.getServerIP());
 
         serverEndTime = System.currentTimeMillis();

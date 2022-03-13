@@ -206,7 +206,7 @@ public class Server extends Thread {
         
         try
         {
-         inputStream = new Scanner(new FileInputStream("account.txt"));
+         inputStream = new Scanner(new FileInputStream("COMP346_A2\\src\\account.txt"));
         }
         catch(FileNotFoundException e)
         {
@@ -339,7 +339,7 @@ public class Server extends Thread {
      * @param i, amount
      */
    
-     public double deposit(int i, double amount)
+     public synchronized double deposit(int i, double amount)
      {  double curBalance;      /* Current account balance */
        
      		curBalance = account[i].getBalance( );          /* Get current account balance */
@@ -368,7 +368,7 @@ public class Server extends Thread {
      * @param i, amount
      */
  
-     public double withdraw(int i, double amount)
+     public synchronized double withdraw(int i, double amount)
      {  double curBalance;      /* Current account balance */
         
      	curBalance = account[i].getBalance( );          /* Get current account balance */
@@ -387,8 +387,9 @@ public class Server extends Thread {
      * @param i
      */
  
-     public double query(int i)
-     {  double curBalance;      /* Current account balance */
+     public synchronized double query(int i)
+     {  
+    	 double curBalance;      /* Current account balance */
         
      	curBalance = account[i].getBalance( );          /* Get current account balance */
         
@@ -415,20 +416,46 @@ public class Server extends Thread {
      */
       
     public void run()
-    {   Transactions trans = new Transactions();
-    	 long serverStartTime, serverEndTime;
-    
-	/* System.out.println("\n DEBUG : Server.run() - starting server thread " + getServerThreadId() + " " + Network.getServerConnectionStatus()); */
+    {   
     	
-	Transactions trans = new Transactions();
-    	long serverStartTime, serverEndTime;
-    
-	/* System.out.println("\n DEBUG : Server.run() - starting server thread " + objNetwork.getServerConnectionStatus()); */
+    	if (serverThreadId.equals("server1")){
+            serverThreadRunningStatus1 = "running";
+            Transactions trans = new Transactions();
+            long serverStartTime, serverEndTime;
+            Network.connect(Network.getServerIP());
+            System.out.println("\n DEBUG : Server.run() - starting server thread " + Network.getServerConnectionStatus());
+            serverStartTime = System.currentTimeMillis();
+            while (!Network.getInBufferStatus().equals("full")){
+                Thread.yield();
+            }
+            processTransactions(trans);
+            serverThreadRunningStatus1 = "terminated";
+            while (serverThreadRunningStatus2.equals("running"))
+                Thread.yield();
+            serverEndTime =  System.currentTimeMillis();
+            System.out.println("\n Terminating server thread 1 - " + " Running time " + (serverEndTime - serverStartTime) + " milliseconds");
+        }
+        else {
+            serverThreadRunningStatus2 = "running";
+            Transactions trans = new Transactions();
+            long serverStartTime, serverEndTime;
+            Network.connect(Network.getServerIP());
+            System.out.println("\n DEBUG : Server.run() - starting server thread " + Network.getServerConnectionStatus());
+            serverStartTime = System.currentTimeMillis();
+            while (!Network.getInBufferStatus().equals("full")){
+                Thread.yield();
+            }
+            processTransactions(trans);
+            serverThreadRunningStatus2 = "terminated";
+            while (serverThreadRunningStatus1.equals("running"))
+                Thread.yield();
+            
+            serverEndTime =  System.currentTimeMillis();
+            System.out.println("\n Terminating server thread 2 - " + " Running time " + (serverEndTime - serverStartTime) + " milliseconds");
+        }
+
+        Network.disconnect(Network.getServerIP());
     	
-    	/* .....................................................................................................................................................................................................*/
-        
-        System.out.println("\n Terminating server thread - " + " Running time " + (serverEndTime - serverStartTime) + " milliseconds");
-	
     }
 }
 

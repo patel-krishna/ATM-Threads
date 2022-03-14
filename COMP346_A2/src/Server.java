@@ -404,7 +404,6 @@ public class Server extends Thread {
 
     public void run() {
     	// TODO modify here to accommodate two threads and also display running time of each thread
-
     	
     	Transactions trans = new Transactions();
     	long serverStartTime, serverEndTime;
@@ -419,6 +418,9 @@ public class Server extends Thread {
     	
     	// End timing
     	serverEndTime = System.currentTimeMillis();
+    	
+    	// Disconnect server from Network
+    	Network.disconnect(Network.getServerIP());
     	
     	/* .....................................................................................................................................................................................................*/
 

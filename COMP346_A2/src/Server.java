@@ -47,7 +47,7 @@ public class Server extends Thread {
             serverThreadId = stid; /* unshared variable so each thread has its own copy */
             serverThreadRunningStatus1 = "idle";
             account = new Accounts[maxNbAccounts];
-            System.out.println("\n Inializing the Accounts database ...");
+            System.out.println("\n Initializing the Accounts database ...");
             initializeAccounts();
             System.out.println("\n Connecting server to network ...");
             if (!(Network.connect(Network.getServerIP()))) {
@@ -179,25 +179,26 @@ public class Server extends Thread {
     public void setServerThreadRunningStatus2(String runningStatus) {
         serverThreadRunningStatus2 = runningStatus;
     }
-    
-    
+
     /**
      * Accessor method for running status 3
+     * 
      * @return server running status 3
      */
     public static String getServerThreadRunningStatus3() {
-		return serverThreadRunningStatus3;
-	}
+        return serverThreadRunningStatus3;
+    }
 
     /**
      * Setter method for running status 3
+     * 
      * @param serverThreadRunningStatus3 running status
      */
-	public static void setServerThreadRunningStatus3(String serverThreadRunningStatus3) {
-		Server.serverThreadRunningStatus3 = serverThreadRunningStatus3;
-	}
+    public static void setServerThreadRunningStatus3(String serverThreadRunningStatus3) {
+        Server.serverThreadRunningStatus3 = serverThreadRunningStatus3;
+    }
 
-	/**
+    /**
      * Initialization of the accounts from an input file
      * 
      * @return
@@ -208,7 +209,7 @@ public class Server extends Thread {
         int i = 0; /* index of accounts array */
 
         try {
-        	// Mac
+            // Mac
             inputStream = new Scanner(new FileInputStream("src/account.txt"));
 
             // Windows
@@ -234,7 +235,8 @@ public class Server extends Thread {
         }
         setNumberOfAccounts(i); /* Record the number of accounts processed */
 
-        System.out.println("\n DEBUG : Server.initializeAccounts() " + getNumberOfAccounts() + " accounts processed");
+        // System.out.println("\n DEBUG : Server.initializeAccounts() " +
+        // getNumberOfAccounts() + " accounts processed");
 
         inputStream.close();
     }
@@ -277,8 +279,8 @@ public class Server extends Thread {
             }
 
             if (!Network.getInBufferStatus().equals("empty")) {
-                System.out.println("\n DEBUG : Server.processTransactions() - transferring in account "
-                        + trans.getAccountNumber());
+                // System.out.println("\n DEBUG : Server.processTransactions() - transferring in
+                // account " + trans.getAccountNumber());
 
                 Network.transferIn(trans); /* Transfer a transaction from the network input buffer */
 
@@ -289,8 +291,8 @@ public class Server extends Thread {
                     trans.setTransactionBalance(newBalance);
                     trans.setTransactionStatus("done");
 
-                    System.out.println("\n DEBUG : Server.processTransactions() - Deposit of "
-                            + trans.getTransactionAmount() + " in account " + trans.getAccountNumber());
+                    // System.out.println("\n DEBUG : Server.processTransactions() - Deposit of "
+                    // + trans.getTransactionAmount() + " in account " + trans.getAccountNumber());
                 } else
                 /* Process withdraw operation */
                 if (trans.getOperationType().equals("WITHDRAW")) {
@@ -298,8 +300,9 @@ public class Server extends Thread {
                     trans.setTransactionBalance(newBalance);
                     trans.setTransactionStatus("done");
 
-                    System.out.println("\n DEBUG : Server.processTransactions() - Withdrawal of "
-                            + trans.getTransactionAmount() + " from account " + trans.getAccountNumber());
+                    // System.out.println("\n DEBUG : Server.processTransactions() - Withdrawal of "
+                    // + trans.getTransactionAmount() + " from account " +
+                    // trans.getAccountNumber());
                 } else
                 /* Process query operation */
                 if (trans.getOperationType().equals("QUERY")) {
@@ -307,16 +310,18 @@ public class Server extends Thread {
                     trans.setTransactionBalance(newBalance);
                     trans.setTransactionStatus("done");
 
-                    System.out.println("\n DEBUG : Server.processTransactions() - Obtaining balance from account"
-                            + trans.getAccountNumber());
+                    // System.out.println("\n DEBUG : Server.processTransactions() - Obtaining
+                    // balance from account"
+                    // + trans.getAccountNumber());
                 }
 
                 while (Network.getOutBufferStatus().equals("full")) {
                     Thread.yield(); /* Yield the cpu if the network output buffer is full */
                 }
 
-                System.out.println("\n DEBUG : Server.processTransactions() - transferring out account "
-                        + trans.getAccountNumber());
+                // System.out.println("\n DEBUG : Server.processTransactions() - transferring
+                // out account "
+                // + trans.getAccountNumber());
 
                 Network.transferOut(trans); /*
                                              * Transfer a completed transaction from the server to the network output
@@ -328,8 +333,9 @@ public class Server extends Thread {
             }
         }
 
-        System.out.println(
-                "\n DEBUG : Server.processTransactions() - " + getNumberOfTransactions() + " accounts updated");
+        // System.out.println(
+        // "\n DEBUG : Server.processTransactions() - " + getNumberOfTransactions() + "
+        // accounts updated");
 
         return true;
     }
@@ -421,48 +427,53 @@ public class Server extends Thread {
      */
 
     public void run() {
-    	// TODO modify here to accommodate two threads and also display running time of each thread
-    	
-    	Transactions trans = new Transactions();
-    	long serverStartTime, serverEndTime;
-    	
-    	// Set running status
-    	if (serverThreadId.equals("server1")) {
-    		serverThreadRunningStatus1 = "running";
-    	} else if (serverThreadId.equals("server2")) {
-    		serverThreadRunningStatus2 = "running";
-    	} else {
-    		serverThreadRunningStatus3 = "running";
-    	}
-    	
-    	// Start timing now
-    	serverStartTime = System.currentTimeMillis();
+        // TODO modify here to accommodate two threads and also display running time of
+        // each thread
 
-    	System.out.println("\n DEBUG : Server.run() - starting server thread " + getServerThreadId() + " " + Network.getServerConnectionStatus());
+        Transactions trans = new Transactions();
+        long serverStartTime, serverEndTime;
 
-    	// Process transactions
-    	this.processTransactions(trans);
-    	
-    	// End timing
-    	serverEndTime = System.currentTimeMillis();
-    	
-    	// Disconnect server from Network
-    	Network.disconnect(Network.getServerIP());
-    	
-    	// Set running status to terminated
-    	if (serverThreadId.equals("server1")) {
-    		serverThreadRunningStatus1 = "terminated";
-    	} else if (serverThreadId.equals("server2")) {
-    		serverThreadRunningStatus2 = "terminated";
-    	} else {
-    		serverThreadRunningStatus3 = "terminated";
-    	}
-    	
-    	/* .....................................................................................................................................................................................................*/
+        // Set running status
+        if (serverThreadId.equals("server1")) {
+            serverThreadRunningStatus1 = "running";
+        } else if (serverThreadId.equals("server2")) {
+            serverThreadRunningStatus2 = "running";
+        } else {
+            serverThreadRunningStatus3 = "running";
+        }
 
-    	System.out.println("\n Terminating server thread - " + getServerThreadId() + " Running time " + (serverEndTime - serverStartTime) + " milliseconds");
-	
-   
+        // Start timing now
+        serverStartTime = System.currentTimeMillis();
+
+        System.out.println("\n DEBUG : Server.run() - starting server thread " + getServerThreadId() + " "
+                + Network.getServerConnectionStatus());
+
+        // Process transactions
+        this.processTransactions(trans);
+
+        // End timing
+        serverEndTime = System.currentTimeMillis();
+
+        // Disconnect server from Network
+        Network.disconnect(Network.getServerIP());
+
+        // Set running status to terminated
+        if (serverThreadId.equals("server1")) {
+            serverThreadRunningStatus1 = "terminated";
+        } else if (serverThreadId.equals("server2")) {
+            serverThreadRunningStatus2 = "terminated";
+        } else {
+            serverThreadRunningStatus3 = "terminated";
+        }
+
+        /*
+         * .............................................................................
+         * .............................................................................
+         * ...........................................
+         */
+
+        System.out.println("\n Terminating server thread - " + getServerThreadId() + " Running time "
+                + (serverEndTime - serverStartTime) + " milliseconds");
 
     }
 }

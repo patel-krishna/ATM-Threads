@@ -27,7 +27,7 @@ public class Network extends Thread {
     private static Semaphore TransferOut;
     private static Semaphore TransferIn;
     private static Semaphore semSend;
-    private static Semaphore semRecieve;  
+    private static Semaphore semReceive;
     
     /** 
      * Constructor of the Network class
@@ -48,7 +48,7 @@ public class Network extends Thread {
          maxNbPackets = 10;
          
          semSend = new Semaphore(10,true);
-         semRecieve = new Semaphore(0, true);
+         semReceive = new Semaphore(0, true);
          TransferIn = new Semaphore(0,true);
          TransferOut = new Semaphore(0,true);
          inComingPacket = new Transactions[maxNbPackets];
@@ -402,7 +402,7 @@ public class Network extends Thread {
          public static boolean receive(Transactions outPacket)
         {
         	 try {
-                 semRecieve.acquire();
+                 semReceive.acquire();
              } catch (InterruptedException e) {
                  e.printStackTrace();
              }
@@ -470,7 +470,7 @@ public class Network extends Thread {
         		{
         			setOutBufferStatus("normal");
         		}
-        		semRecieve.release();     
+        		semReceive.release();
              return true;
         }   
          

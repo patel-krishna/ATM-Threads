@@ -37,10 +37,9 @@ public class Network extends Thread {
                                                             * empty
                                                             */
     private static String networkStatus; /* Network status - active, inactive */
-    private static Semaphore TransferOut;
-    private static Semaphore TransferIn;
-    private static Semaphore semSend;
-    private static Semaphore semRecieve;
+    
+    // Declare a semaphore that will lock down critical code
+    private static Semaphore sem;
 
     /**
      * Constructor of the Network class
@@ -59,10 +58,8 @@ public class Network extends Thread {
         portID = 0;
         maxNbPackets = 10;
 
-        semSend = new Semaphore(10, true);
-        semRecieve = new Semaphore(0, true);
-        TransferIn = new Semaphore(0, true);
-        TransferOut = new Semaphore(0, true);
+        sem = new Semaphore(1, true);
+       
         inComingPacket = new Transactions[maxNbPackets];
         outGoingPacket = new Transactions[maxNbPackets];
         for (i = 0; i < maxNbPackets; i++) {
@@ -349,7 +346,7 @@ public class Network extends Thread {
      */
     public static boolean send(Transactions inPacket) {
         try {
-            semSend.acquire();
+            sem.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -377,7 +374,7 @@ public class Network extends Thread {
         } else {
             setInBufferStatus("normal");
         }
-        TransferIn.release();
+        sem.release();
         return true;
     }
 
@@ -391,7 +388,7 @@ public class Network extends Thread {
      */
     public static boolean receive(Transactions outPacket) {
         try {
-            semRecieve.acquire();
+            sem.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -418,7 +415,7 @@ public class Network extends Thread {
         } else {
             setOutBufferStatus("normal");
         }
-        semSend.release();
+        sem.release();
         return true;
     }
 
@@ -432,7 +429,7 @@ public class Network extends Thread {
      */
     public static boolean transferOut(Transactions outPacket) {
         try {
-            TransferOut.acquire();
+            sem.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -459,7 +456,7 @@ public class Network extends Thread {
         } else {
             setOutBufferStatus("normal");
         }
-        semRecieve.release();
+        sem.release();
         return true;
     }
 
@@ -472,7 +469,7 @@ public class Network extends Thread {
      */
     public static boolean transferIn(Transactions inPacket) {
         try {
-            TransferIn.acquire();
+            sem.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -499,7 +496,7 @@ public class Network extends Thread {
         } else {
             setInBufferStatus("normal");
         }
-        TransferOut.release();
+        sem.release();
         return true;
     }
 

@@ -24,6 +24,10 @@ public class Driver2 {
 		objServer1.start();
 		Server objServer2 = new Server("server2");
 		objServer2.start();
+		
+		// Inserting 3rd server thread
+		Server objServer3 = new Server("server3");
+		objServer3.start();
 
 		Client objClient1 = new Client("sending"); /* Start the sending client thread */
 		objClient1.start();

@@ -120,10 +120,10 @@ public class Server extends Thread {
 
         try {
             // Mac
-            // inputStream = new Scanner(new FileInputStream("src/account.txt"));
+            inputStream = new Scanner(new FileInputStream("src/account.txt"));
 
             // Windows
-            inputStream = new Scanner(new FileInputStream("src\\account.txt"));
+            // inputStream = new Scanner(new FileInputStream("src\\account.txt"));
         } catch (FileNotFoundException e) {
             System.out.println("File account.txt was not found");
             System.out.println("or could not be opened.");

@@ -1,0 +1,2 @@
+Compared to the busy-waiting phase, using Semaphores on 2 threads had slightly faster running times but the difference is overall negligible.
+Using a third server thread had faster running times, and we observed approximately 100ms faster times.

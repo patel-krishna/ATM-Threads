@@ -1,0 +1,2 @@
+We chose to use Java synchronized methods to since it provides simplicity in locking all other threads using the same code block.
+In our case, it is also possible to use a synchonized statement in an inner block, which would lead to the same outcome.

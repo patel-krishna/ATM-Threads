@@ -214,28 +214,17 @@ public class Client extends Thread {
             sendClientStartTime = System.currentTimeMillis();
             this.sendTransactions();
             sendClientEndTime = System.currentTimeMillis();
-<<<<<<< HEAD
-            System.out.println("\nTerminating client sending thread -  Running time "+ (sendClientEndTime - sendClientStartTime) +" milliseconds");
-           // Network.disconnect(Network.getClientIP()); //removed due to demo1
-        }
-        else if (this.clientOperation.equals("receiving")){
-=======
             System.out.println("\nTerminating client sending thread -  Running time "
                     + (sendClientEndTime - sendClientStartTime) + " milliseconds");
             // Network.disconnect(Network.getClientIP()); //removed due to demo1
         } else if (this.clientOperation.equals("receiving")) {
->>>>>>> 3943852a41c896fae57ab32fcfae14f72ef58a16
             System.out.println("\n DEBUG : Client.run() - starting client recieving thread connected");
             Network.connect(Network.getClientIP());
             receiveClientStartTime = System.currentTimeMillis();
             this.receiveTransactions(transact);
             receiveClientEndTime = System.currentTimeMillis();
-<<<<<<< HEAD
-            System.out.println("\nTerminating client receiving thread - Running time " + (receiveClientEndTime - receiveClientStartTime) + " milliseconds");
-=======
             System.out.println("\nTerminating client receiving thread - Running time "
                     + (receiveClientEndTime - receiveClientStartTime) + " milliseconds");
->>>>>>> 3943852a41c896fae57ab32fcfae14f72ef58a16
             Network.disconnect(Network.getClientIP());
         }
 

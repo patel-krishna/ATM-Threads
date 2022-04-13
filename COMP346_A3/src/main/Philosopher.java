@@ -1,5 +1,7 @@
+package main;
+
 import common.BaseThread;
-import java.util.Random; 
+import java.util.Random;
 
 /**
  * Class Philosopher.
@@ -7,8 +9,7 @@ import java.util.Random;
  *
  * @author Serguei A. Mokhov, mokhov@cs.concordia.ca
  */
-public class Philosopher extends BaseThread
-{
+public class Philosopher extends BaseThread {
 	/**
 	 * Max time an action can take (in milliseconds)
 	 */
@@ -23,16 +24,14 @@ public class Philosopher extends BaseThread
 	 * - yield
 	 * - The print that they are done eating.
 	 */
-	public void eat()
-	{
-		try
-		{
-			// ...
-			sleep((long)(Math.random() * TIME_TO_WASTE));
-			// ...
-		}
-		catch(InterruptedException e)
-		{
+	public void eat() {
+		try {
+			System.out.printf("Philosopher %d has started eating\n", getTID());
+			BaseThread.yield();
+			sleep((long) (Math.random() * TIME_TO_WASTE));
+			BaseThread.yield();
+			System.out.printf("Philosopher %d has finished eating\n", getTID());
+		} catch (InterruptedException e) {
 			System.err.println("Philosopher.eat():");
 			DiningPhilosophers.reportException(e);
 			System.exit(1);
@@ -47,9 +46,18 @@ public class Philosopher extends BaseThread
 	 * - yield
 	 * - The print that they are done thinking.
 	 */
-	public void think()
-	{
-		// ...
+	public void think() {
+		try {
+			System.out.printf("Philosopher %d has started thinking\n", getTID());
+			BaseThread.yield();
+			sleep((long) (Math.random() * TIME_TO_WASTE));
+			BaseThread.yield();
+			System.out.printf("Philosopher %d has finished thinking\n", getTID());
+		} catch (InterruptedException e) {
+			System.err.println("Philosopher.think():");
+			DiningPhilosophers.reportException(e);
+			System.exit(1);
+		}
 	}
 
 	/**
@@ -60,14 +68,13 @@ public class Philosopher extends BaseThread
 	 * - yield
 	 * - The print that they are done talking.
 	 */
-	public void talk()
-	{
+	public void talk() {
 		// ...
-		System.out.printf("Philosopher "+ getTID()+" has started talking\n");
+		System.out.printf("Philosopher " + getTID() + " has started talking\n");
 		BaseThread.yield();
 		saySomething();
 		BaseThread.yield();
-		System.out.printf("Philosopher "+ getTID()+" has finished talking\n");
+		System.out.printf("Philosopher " + getTID() + " has finished talking\n");
 
 		// ...
 	}
@@ -75,10 +82,8 @@ public class Philosopher extends BaseThread
 	/**
 	 * No, this is not the act of running, just the overridden Thread.run()
 	 */
-	public void run()
-	{
-		for(int i = 0; i < DiningPhilosophers.DINING_STEPS; i++)
-		{
+	public void run() {
+		for (int i = 0; i < DiningPhilosophers.DINING_STEPS; i++) {
 			DiningPhilosophers.soMonitor.pickUp(getTID());
 
 			eat();
@@ -93,15 +98,14 @@ public class Philosopher extends BaseThread
 			 * philosopher is about to say something terribly useful.
 			 */
 			boolean decision = random.nextBoolean();
-			if(decision == true)
-			{
+			if (decision == true) {
 				DiningPhilosophers.soMonitor.requestTalk();
 				talk();
 				DiningPhilosophers.soMonitor.endTalk();
 				// ...
 			}
 
-			yield();
+			BaseThread.yield();
 		}
 	} // run()
 
@@ -109,22 +113,18 @@ public class Philosopher extends BaseThread
 	 * Prints out a phrase from the array of phrases at random.
 	 * Feel free to add your own phrases.
 	 */
-	public void saySomething()
-	{
-		String[] astrPhrases =
-		{
-			"Eh, it's not easy to be a philosopher: eat, think, talk, eat...",
-			"You know, true is false and false is true if you think of it",
-			"2 + 2 = 5 for extremely large values of 2...",
-			"If thee cannot speak, thee must be silent",
-			"My number is " + getTID() + ""
+	public void saySomething() {
+		String[] astrPhrases = {
+				"Eh, it's not easy to be a philosopher: eat, think, talk, eat...",
+				"You know, true is false and false is true if you think of it",
+				"2 + 2 = 5 for extremely large values of 2...",
+				"If thee cannot speak, thee must be silent",
+				"My number is " + getTID() + ""
 		};
 
-		System.out.println
-		(
-			"Philosopher " + getTID() + " says: " +
-			astrPhrases[(int)(Math.random() * astrPhrases.length)]
-		);
+		System.out.println(
+				"Philosopher " + getTID() + " says: " +
+						astrPhrases[(int) (Math.random() * astrPhrases.length)]);
 	}
 }
 

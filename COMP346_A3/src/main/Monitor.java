@@ -1,3 +1,5 @@
+package main;
+
 /**
  * Class Monitor
  * To synchronize dining philosophers.

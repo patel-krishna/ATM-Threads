@@ -1,3 +1,5 @@
+package main;
+
 /**
  * Class DiningPhilosophers
  * The main starter.

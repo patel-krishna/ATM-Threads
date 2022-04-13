@@ -15,8 +15,7 @@ import java.util.Random;
  *
  * @author Serguei A. Mokhov, mokhov@cs.concordia.ca
  */
-public class BaseThread extends Thread
-{
+public class BaseThread extends Thread {
 	/*
 	 * ------------
 	 * Data members
@@ -47,19 +46,17 @@ public class BaseThread extends Thread
 	/**
 	 * Default
 	 */
-	public BaseThread()
-	{
+	public BaseThread() {
 		setTID();
 	}
 
 	/**
 	 * Assigns name to the thread and places it to the specified group
 	 *
-	 * @param poGroup ThreadGroup to add this thread to
+	 * @param poGroup  ThreadGroup to add this thread to
 	 * @param pstrName A string indicating human-readable thread's name
 	 */
-	public BaseThread(ThreadGroup poGroup, String pstrName)
-	{
+	public BaseThread(ThreadGroup poGroup, String pstrName) {
 		super(poGroup, pstrName);
 		setTID();
 	}
@@ -67,25 +64,23 @@ public class BaseThread extends Thread
 	/**
 	 * Sets user-specified TID
 	 */
-	public BaseThread(final int piTID)
-	{
+	public BaseThread(final int piTID) {
 		this.iTID = piTID;
 	}
 
 	/**
 	 * Retrieves our TID
+	 * 
 	 * @return TID, integer
 	 */
-	public final int getTID()
-	{
+	public final int getTID() {
 		return this.iTID;
 	}
 
 	/**
 	 * Sets internal TID and updates next TID on contruction time, so it's private.
 	 */
-	private final void setTID()
-	{
+	private final void setTID() {
 		this.iTID = siNextTID++;
 	}
 
@@ -93,18 +88,15 @@ public class BaseThread extends Thread
 	 * Just a make up for the PHASE I to make it somewhat tangeable.
 	 * Must be atomic.
 	 */
-	protected synchronized void phase1()
-	{
+	protected synchronized void phase1() {
 		System.out.println(this.getClass().getName() + " thread [TID=" + this.iTID + "] starts PHASE I.");
 
-		System.out.println
-		(
-			"Some stats info in the PHASE I:\n" +
-			"    iTID = " + this.iTID +
-			", siNextTID = " + siNextTID +
-			", siTurn = " + siTurn +
-			".\n    Their \"checksum\": " + (siNextTID * 100 + this.iTID * 10 + siTurn)
-		);
+		System.out.println(
+				"Some stats info in the PHASE I:\n" +
+						"    iTID = " + this.iTID +
+						", siNextTID = " + siNextTID +
+						", siTurn = " + siTurn +
+						".\n    Their \"checksum\": " + (siNextTID * 100 + this.iTID * 10 + siTurn));
 
 		System.out.println(this.getClass().getName() + " thread [TID=" + this.iTID + "] finishes PHASE I.");
 	}
@@ -113,18 +105,15 @@ public class BaseThread extends Thread
 	 * Just a make up for the PHASE II to make it somewhat tangeable.
 	 * Must be atomic.
 	 */
-	protected synchronized void phase2()
-	{
+	protected synchronized void phase2() {
 		System.out.println(this.getClass().getName() + " thread [TID=" + this.iTID + "] starts PHASE II.");
 
-		System.out.println
-		(
-			"Some stats info in the PHASE II:\n" +
-			"    iTID = " + this.iTID +
-			", siNextTID = " + siNextTID +
-			", siTurn = " + siTurn +
-			".\n    Their \"checksum\": " + (siNextTID * 100 + this.iTID * 10 + siTurn)
-		);
+		System.out.println(
+				"Some stats info in the PHASE II:\n" +
+						"    iTID = " + this.iTID +
+						", siNextTID = " + siNextTID +
+						", siTurn = " + siTurn +
+						".\n    Their \"checksum\": " + (siNextTID * 100 + this.iTID * 10 + siTurn));
 
 		System.out.println(this.getClass().getName() + " thread [TID=" + this.iTID + "] finishes PHASE II.");
 	}
@@ -135,17 +124,17 @@ public class BaseThread extends Thread
 	 * Use to proceed to the phase II in the correct order.
 	 * Must be atomic.
 	 *
-	 * @param pcIncreasingOrder true if TIDs are in increasing order; false otherwise
+	 * @param pcIncreasingOrder true if TIDs are in increasing order; false
+	 *                          otherwise
 	 *
-	 * @return Returns true if if the TID of currently running thread  matches the turn, 'false' otherwise
+	 * @return Returns true if if the TID of currently running thread matches the
+	 *         turn, 'false' otherwise
 	 */
-	public synchronized boolean turnTestAndSet(boolean pcIncreasingOrder)
-	{
+	public synchronized boolean turnTestAndSet(boolean pcIncreasingOrder) {
 		// test
-		if(siTurn == this.iTID)
-		{
+		if (siTurn == this.iTID) {
 			// set siTurn = siTurn +/- 1;
-			if(pcIncreasingOrder == true)
+			if (pcIncreasingOrder)
 				siTurn++;
 			else
 				siTurn--;
@@ -159,8 +148,7 @@ public class BaseThread extends Thread
 	/**
 	 * Always assumes the increasing order
 	 */
-	public synchronized boolean turnTestAndSet()
-	{
+	public synchronized boolean turnTestAndSet() {
 		return turnTestAndSet(true);
 	}
 
@@ -168,24 +156,21 @@ public class BaseThread extends Thread
 	 * Allows setting arbitratu turn value. Should be set only before
 	 * the threads are started
 	 */
-	public static void setInitialTurn(int piTurn)
-	{
+	public static void setInitialTurn(int piTurn) {
 		siTurn = piTurn;
 	}
 
 	/**
 	 * Default ascending order
 	 */
-	public static void setInitialTurnAscending()
-	{
+	public static void setInitialTurnAscending() {
 		setInitialTurn(1);
 	}
 
 	/**
 	 * Descending order
 	 */
-	public static void setInitialTurnDescending()
-	{
+	public static void setInitialTurnDescending() {
 		setInitialTurn(siNextTID - 1);
 	}
 
@@ -194,13 +179,12 @@ public class BaseThread extends Thread
 	 * Next to useless, but helps to mix up the execution of phases.
 	 * Must NOT be atomic.
 	 */
-	public void randomYield()
-	{
+	public void randomYield() {
 		// Generate from 5 to 40 yield()'s pseudorandomly
-		int iNumYields = (int)((new Random()).nextFloat() * 35) + 5;
+		int iNumYields = (int) ((new Random()).nextFloat() * 35) + 5;
 
-		for(int i = 0; i < iNumYields; i++)
-			yield();
+		for (int i = 0; i < iNumYields; i++)
+			Thread.yield();
 	}
 }
 

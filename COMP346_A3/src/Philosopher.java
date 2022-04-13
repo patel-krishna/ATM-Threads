@@ -1,4 +1,4 @@
-package main;
+
 
 import common.BaseThread;
 import java.util.Random;

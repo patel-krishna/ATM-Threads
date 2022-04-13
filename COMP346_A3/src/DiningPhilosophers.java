@@ -1,4 +1,4 @@
-package main;
+import java.util.Arrays;
 
 /**
  * Class DiningPhilosophers
@@ -68,6 +68,10 @@ public class DiningPhilosophers
 				iPhilosophers +
 				" philosopher(s) came in for a dinner."
 			);
+			
+			// DEBUG output
+			System.out.println("DEBUG Number of chopsticks: " + soMonitor.chopsticks.length);
+			System.out.printf("DEBUG Current chopsticks array: %s%n", Arrays.toString(soMonitor.chopsticks));
 
 			// Main waits for all its children to die...
 			// I mean, philosophers to finish their dinner.

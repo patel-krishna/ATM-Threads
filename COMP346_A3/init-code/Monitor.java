@@ -12,6 +12,9 @@ public class Monitor
 	 * ------------
 	 */
 
+	int numOfPhilo;
+	boolean chopsticks[];
+	boolean turnToTalk;
 
 	/**
 	 * Constructor
@@ -19,6 +22,13 @@ public class Monitor
 	public Monitor(int piNumberOfPhilosophers)
 	{
 		// TODO: set appropriate number of chopsticks based on the # of philosophers
+		numOfPhilo = piNumberOfPhilosophers;
+		chopsticks = new boolean[piNumberOfPhilosophers];
+		turnToTalk = true;
+
+		for(int i = 0; i< chopsticks.length; i++){
+			chopsticks[i] = true;
+		}
 	}
 
 	/*
@@ -52,6 +62,14 @@ public class Monitor
 	public synchronized void requestTalk()
 	{
 		// ...
+		while(!turnToTalk){
+			try{
+				this.wait();
+			}catch (InterruptedException e){
+				e.printStackTrace();
+			}
+		}
+		turnToTalk = true;
 	}
 
 	/**
@@ -61,6 +79,8 @@ public class Monitor
 	public synchronized void endTalk()
 	{
 		// ...
+		turnToTalk = true;
+		this.notifyAll();
 	}
 }
 
